@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ระบบจัดการงานฝ่ายการพยาบาล</title>
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<style>
+*{box-sizing:border-box}body{margin:0;font:15px system-ui,sans-serif;color:#17384a;background:#f1f6fa}header{min-height:58px;padding:10px 18px;background:#154c63;color:#fff;display:flex;align-items:center;gap:12px;flex-wrap:wrap}h1{font-size:17px;margin:0;flex:1}a,button{font:inherit;border:1px solid #a8c8d5;border-radius:6px;padding:7px 12px;background:#fff;color:#154c63;text-decoration:none;cursor:pointer}main{height:calc(100dvh - var(--header-height,58px));min-height:300px}iframe{width:100%;height:100%;border:0;background:#fff}#setup{max-width:720px;margin:50px auto;padding:25px;line-height:1.8}#status{padding:8px 18px;font-size:14px;background:#fff8d6} [hidden]{display:none!important}
+</style>
+<script src="./config.js"></script>
+</head>
+<body>
+<header><h1>ระบบจัดการงานฝ่ายการพยาบาล</h1><button id="reload" hidden>โหลดระบบใหม่</button><a id="direct" target="_blank" rel="noopener noreferrer" hidden>เปิดระบบโดยตรง</a></header>
+<div id="status" role="status" hidden>กำลังเปิดระบบ หากหน้าไม่แสดงให้เลือก “เปิดระบบโดยตรง”</div>
+<main><section id="setup"><h2>ยังไม่ได้ตั้งค่าลิงก์ระบบ</h2><p>ผู้ดูแลกรอก URL Web App ที่ลงท้ายด้วย /exec ในไฟล์ config.js แล้วเผยแพร่ GitHub Pages อีกครั้ง</p></section><iframe id="app" title="ระบบจัดการงานฝ่ายการพยาบาล" allow="camera" hidden></iframe></main>
+<script>
+(()=>{'use strict';
+const app=document.getElementById('app'),direct=document.getElementById('direct'),reload=document.getElementById('reload'),status=document.getElementById('status'),header=document.querySelector('header');
+const resize=()=>document.documentElement.style.setProperty('--header-height',(header.offsetHeight+(status.hidden?0:status.offsetHeight))+'px');new ResizeObserver(resize).observe(header);
+let url;try{url=new URL(window.NURSING_WRAPPER.appsScriptUrl);if(url.protocol!=='https:'||url.hostname!=='script.google.com'||!/^\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(url.pathname)||url.search||url.hash)throw Error('Invalid URL');}catch{return;}
+document.getElementById('setup').hidden=true;app.hidden=false;direct.hidden=false;reload.hidden=false;status.hidden=false;direct.href=url.href;app.src=url.href;resize();
+app.addEventListener('load',()=>{status.textContent='หากระบบไม่แสดงหรือเข้าสู่ระบบไม่ได้ ให้เลือก “เปิดระบบโดยตรง”';resize();});
+reload.onclick=()=>{if(confirm('โหลดระบบใหม่อาจทำให้งานที่ยังไม่บันทึกหาย กรุณาตรวจว่าขึ้น “บันทึกแล้ว” ก่อนดำเนินการ'))app.src=url.href;};
+})();
+</script>
+</body></html>
